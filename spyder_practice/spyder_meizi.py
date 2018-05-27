@@ -74,7 +74,7 @@ class MZitu():
         #write log file 
         info = "There are %d pictures in %s"%(count, _folder_name)
         with open("plan.txt","a+") as f:
-            f.write(info)
+            f.write(info+'\r\n')
         print("worker %s: %s"%(job_id, info))
         #download pictures page by page in Atlas
         header_pic= self.getHeader(referer = atlas_url)
