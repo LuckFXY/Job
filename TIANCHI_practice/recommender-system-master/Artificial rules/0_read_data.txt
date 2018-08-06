@@ -1,0 +1,12 @@
+-- 导入用户数据
+drop table if exists tianchi_user;
+create  table tianchi_user as 
+select *
+from F:\GitHub\Job\TIANCHI_practice\fresh_comp_offline\tianchi_fresh_comp_train_user.csv
+from odps_tc_257100_f673506e024.tianchi_fresh_comp_train_user_online;
+
+-- 导入商品数据
+drop table if exists tianchi_item;
+create  table tianchi_item as 
+select *
+from odps_tc_257100_f673506e024.tianchi_fresh_comp_train_item_online;

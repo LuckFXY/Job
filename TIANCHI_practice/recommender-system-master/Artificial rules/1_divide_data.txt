@@ -1,0 +1,22 @@
+-- 构建训练集
+drop table if exists data_train;
+create table data_train as
+select *
+from tianchi_user 
+where time < "2014-12-19 00";
+
+-- 构建测试级
+drop  table if exists data_test;
+create table data_test as
+select A.user_id,A.item_id
+from 
+(
+	select user_id,item_id
+	from tianchi_user 
+	where time >= "2014-12-18 00" and behavior_type == 4
+	group by user_id,item_id
+)A
+left outer join tianchi_item B
+on a.item_id == b.item_id
+where !isnull(b.item_id)
+group by a.user_id,a.item_id;

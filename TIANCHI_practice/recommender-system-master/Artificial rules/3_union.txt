@@ -1,0 +1,11 @@
+drop table if exists r;
+create table r as
+select *
+from r_1;
+
+insert into table r
+select * 
+from r_2;
+
+select * from r
+

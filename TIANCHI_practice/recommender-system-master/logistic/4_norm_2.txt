@@ -1,0 +1,28 @@
+-- split the samples and fetch o2o samples
+drop table if exists feats_29_norm;
+create table feats_29_norm as select * from feats_union_norm where sign = "train";
+
+drop table if exists feats_30_norm;
+create table feats_30_norm as select * from feats_union_norm where sign = "test";
+
+drop table if exists feats_31_norm;
+create table feats_31_norm as select * from feats_union_norm where sign = "predict"; 
+
+-- fetch o2o set
+drop table if exists feats_29_o2o_norm;
+create table if not exists feats_29_o2o_norm as
+select t1.* from feats_29_norm t1 join
+(select item_id from tianchi_item  group by item_id) t2
+on t1.item_id = t2.item_id;
+
+drop table if exists feats_30_o2o_norm;
+create table if not exists feats_30_o2o_norm as
+select t1.* from feats_30_norm t1 join
+(select item_id from tianchi_item  group by item_id) t2
+on t1.item_id = t2.item_id;
+
+drop table if exists feats_31_o2o_norm;
+create table if not exists feats_31_o2o_norm as
+select t1.* from feats_31_norm t1 join
+(select item_id from tianchi_item  group by item_id) t2
+on t1.item_id = t2.item_id;

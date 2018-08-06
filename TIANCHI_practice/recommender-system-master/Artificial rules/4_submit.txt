@@ -1,0 +1,4 @@
+drop table if exists tianchi_mobile_recommendation_predict;
+create table tianchi_mobile_recommendation_predict as
+select *
+from r_3

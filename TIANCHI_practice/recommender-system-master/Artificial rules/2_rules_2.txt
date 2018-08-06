@@ -1,0 +1,32 @@
+drop table if exists r_2;
+create table r_2 as
+select c.user_id,c.item_id
+from 
+(
+	select a.user_id,a.item_id
+	from
+	(
+		select temp.user_id,temp.item_id
+		from 
+		(
+			select user_id,item_id,count(user_id) countNum
+			from data_train 
+			where time >= "2014-12-15 00" and time < "2014-12-19 00" and behavior_type == 2
+			group by user_id,item_id
+		)temp
+		where countNum>2
+	)a
+	left outer join 
+	(
+		select user_id,item_id
+		from data_train 
+		where time >= "2014-12-17 18" and time < "2014-12-19 00" and behavior_type == 4
+		group by user_id,item_id
+	)b
+	on a.user_id == b.user_id and a.item_id == b.item_id
+	where isnull(b.item_id)
+)c
+left outer join tianchi_item d
+on c.item_id == d.item_id
+where !isnull(d.item_id)
+group by c.user_id,c.item_id

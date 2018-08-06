@@ -1,0 +1,28 @@
+
+p table if exists user_cate;
+create table user_cate as
+select distinct  user_id, item_category
+from recommend_train_user_o2o
+where time>="2014-12-18 14:00:00" and behavior_type == 4;
+
+drop table if exists r_3;
+create table r_3 as
+select c.user_id,c.item_id
+from 
+(
+	select a.user_id,a.item_id
+	from
+	(
+		select user_id,item_id,item_category
+		from recommend_train_user_o2o 
+		where time >= "2014-12-18 14:00:00" and behavior_type == 3
+		group by user_id,item_id,item_category
+	)a
+	left outer join user_cate b
+	on a.user_id==b.user_id and a.item_category==b.item_category
+	where isnull(b.item_category)
+)c
+left outer join tianchi_item d
+on c.item_id == d.item_id
+where !isnull(d.item_id)
+group by c.user_id,c.item_id
