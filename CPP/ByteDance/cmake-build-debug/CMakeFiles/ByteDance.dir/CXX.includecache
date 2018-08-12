@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+F:/GitHub/Job/CPP/ByteDance/Fans_group.cpp
+share.h
+F:/GitHub/Job/CPP/ByteDance/share.h
+set
+-
+
+F:/GitHub/Job/CPP/ByteDance/main.cpp
+share.h
+F:/GitHub/Job/CPP/ByteDance/share.h
+
+F:/GitHub/Job/CPP/ByteDance/merge_overlap.cpp
+share.h
+F:/GitHub/Job/CPP/ByteDance/share.h
+algorithm
+-
+sstream
+-
+
+F:/GitHub/Job/CPP/ByteDance/share.h
+iostream
+-
+vector
+-
+string
+-
+
+F:/GitHub/Job/CPP/ByteDance/tools.cpp
+share.h
+F:/GitHub/Job/CPP/ByteDance/share.h
+sstream
+-
+
