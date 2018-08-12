@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+F:/GitHub/Job/CPP/Netease/apple_orchard.cpp
+share.h
+F:/GitHub/Job/CPP/Netease/share.h
+
+F:/GitHub/Job/CPP/Netease/main.cpp
+share.h
+F:/GitHub/Job/CPP/Netease/share.h
+
+F:/GitHub/Job/CPP/Netease/share.h
+iostream
+-
+vector
+-
+
