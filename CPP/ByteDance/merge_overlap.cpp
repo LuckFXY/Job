@@ -47,7 +47,7 @@ void merge_overlap() {
             output.emplace_back(it);
             last = &(*it);
         }
-        else{
+        else if((*it).second > (*last).second)){
             (*last).second = (*it).second;
         }
     }

@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+F:/GitHub/Job/CPP/Leetcode/435_Non-overlapping_Intervals.cpp
+share.h
+F:/GitHub/Job/CPP/Leetcode/share.h
+sstream
+-
+iostream
+-
+algorithm
+-
+vector
+-
+
+F:/GitHub/Job/CPP/Leetcode/654_Maximum_Binary_Tree.cpp
+vector
+-
+iostream
+-
+queue
+-
+
+F:/GitHub/Job/CPP/Leetcode/main.cpp
+share.h
+F:/GitHub/Job/CPP/Leetcode/share.h
+
+F:/GitHub/Job/CPP/Leetcode/share.h
+

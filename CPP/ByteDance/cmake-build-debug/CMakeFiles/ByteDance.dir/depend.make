@@ -5,7 +5,6 @@ CMakeFiles/ByteDance.dir/Fans_group.cpp.obj: ../Fans_group.cpp
 CMakeFiles/ByteDance.dir/Fans_group.cpp.obj: ../share.h
 
 CMakeFiles/ByteDance.dir/main.cpp.obj: ../main.cpp
-CMakeFiles/ByteDance.dir/main.cpp.obj: ../share.h
 
 CMakeFiles/ByteDance.dir/merge_overlap.cpp.obj: ../merge_overlap.cpp
 CMakeFiles/ByteDance.dir/merge_overlap.cpp.obj: ../share.h
