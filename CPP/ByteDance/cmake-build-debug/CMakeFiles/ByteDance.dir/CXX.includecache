@@ -13,8 +13,10 @@ set
 -
 
 F:/GitHub/Job/CPP/ByteDance/main.cpp
-share.h
-F:/GitHub/Job/CPP/ByteDance/share.h
+vector
+-
+iostream
+-
 
 F:/GitHub/Job/CPP/ByteDance/merge_overlap.cpp
 share.h
