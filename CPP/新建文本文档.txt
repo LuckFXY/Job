@@ -1,0 +1,40 @@
+/**
+ * Definition for an interval.
+ * struct Interval {
+ *     int start;
+ *     int end;
+ *     Interval() : start(0), end(0) {}
+ *     Interval(int s, int e) : start(s), end(e) {}
+ * };
+ */
+
+
+typedef vector<Interval>::iterator iter_type;
+
+class Solution {
+public:
+    
+    static bool compare(const Interval &src, const Interval &dst){
+        return src.end > dst.end;
+    }
+    
+    int eraseOverlapIntervals(vector<Interval>& intervals) {
+        if(intervals.size() == 0)
+            return 0;
+        sort(intervals.begin(), intervals.end(), compare);
+        vector<iter_type> iter_vec;
+        int big = intervals.front().end + 1;
+        Interval* last = new Interval(big, big);
+        for(auto it = intervals.begin(); it != intervals.end(); it++){
+            if( (*it).end <= (*last).start ){
+                iter_vec.emplace_back(it);
+                last = &(*it);
+            }
+            else if((*it).start > (*last).start){
+                (*last).start =(*it).start;
+            }
+        }
+
+        return intervals.size() - iter_vec.size();
+    }
+};

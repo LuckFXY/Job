@@ -3,5 +3,5 @@ project(Leetcode)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp 654_Maximum_Binary_Tree.cpp 435_Non-overlapping_Intervals.cpp share.h)
+set(SOURCE_FILES main.cpp bag_problem_9.cpp 95_Unique_Binary_Search_Trees_II.cpp)
 add_executable(Leetcode ${SOURCE_FILES})
