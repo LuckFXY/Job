@@ -13,3 +13,5 @@ fresh_comp_offline/
 *.exe
 *.jar
 临时工作/
+**/cmake-build-debug
+

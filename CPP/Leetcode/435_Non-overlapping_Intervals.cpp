@@ -22,7 +22,7 @@ ostream& operator<<(ostream& out, const Interval& src){
     cout<<src.start<<' '<<src.end;
 }
 void test_input(vector<Interval>& intervals){
-    string s ="[1,2], [2,3], [3,4], [1,3] ";
+    string s ="[1,2], [2,3]";
     stringstream ss;
     ss.str(s);
     int a,b;
@@ -40,15 +40,15 @@ void deduplicate_overlapping(){
     test_input(intervals);
     sort(intervals.begin(), intervals.end(), compare);
     vector<iter_type> iter_vec;
-    int big = intervals.front().second + 1;
-    PAIR* last = new PAIR(big, big);
+    //int big = intervals.front().end + 1;
+    Interval* last = nullptr;
     for(auto it = intervals.begin(); it != intervals.end(); it++){
-        if( (*it).second <= (*last).first ){
+        if( last == nullptr || (*it).end <= (*last).start ){
             iter_vec.emplace_back(it);
             last = &(*it);
         }
-        else if((*it).first > (*last).first){
-            (*last).first =(*it).first;
+        else if((*it).start > (*last).start){
+            (*last).start =(*it).start;
         }
     }
 //    for(auto it = iter_vec.begin(); it != iter_vec.end(); it++){
