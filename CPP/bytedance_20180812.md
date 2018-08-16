@@ -95,10 +95,11 @@
 >     vector <PAIR> intervals;
 >     int m;
 >     stringstream stream;
->     cin>>m;
+>     string s;
 >     for(int i=0; i<m; i++){
 >         stream.clear();
->         stream.str(s[i]);
+>         cin>>s;
+>         stream.str(s);
 >         int a,b;
 >         char c;
 >         while(stream>>a>>c>>b){
