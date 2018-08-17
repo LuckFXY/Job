@@ -1,4 +1,8 @@
-参考教程：厦门大学数据库实验室 http://dblab.xmu.edu.cn/blog/1689-2/ （基本是搬过来的）
+参考网址：http://dblab.xmu.edu.cn/blog/1689-2/
+
+作者：[阮榕城](http://dblab.xmu.edu.cn/blog/author/ruanrongcheng/)
+
+联系方式：[www.nekomiao.me](http://www.nekomiao.me/) | moc.qq@crnaur
 
 环境： ubuntu18 
 

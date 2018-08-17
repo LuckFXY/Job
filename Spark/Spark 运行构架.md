@@ -1,3 +1,9 @@
+原网址：http://dblab.xmu.edu.cn/blog/1711-2/
+
+作者：[阮榕城](http://dblab.xmu.edu.cn/blog/author/ruanrongcheng/)
+
+联系方式：[www.nekomiao.me](http://www.nekomiao.me/) | moc.qq@crnaur
+
 # 1. 基本概念
 
 **RDD**：是弹性分布式数据集（Resilient Distributed Dataset）的简称，是分布式内存的一个抽象概念，提供了一种高度受限的共享内存模型；

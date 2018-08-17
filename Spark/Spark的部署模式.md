@@ -1,3 +1,9 @@
+原网址：http://dblab.xmu.edu.cn/blog/1713-2/
+
+作者：[阮榕城](http://dblab.xmu.edu.cn/blog/author/ruanrongcheng/)
+
+联系方式：[www.nekomiao.me](http://www.nekomiao.me/) | moc.qq@crnaur
+
 # 1. Spark三种部署方式
 
 Spark应用程序在集群上部署运行时，可以由不同的组件为其提供资源管理调度服务（资源包括CPU、内存等）。比如，可以使用自带的独立集群管理器（standalone），或者使用YARN，也可以使用Mesos。因此，Spark包括三种不同类型的集群部署方式，包括standalone、Spark on Mesos和Spark on YARN。
