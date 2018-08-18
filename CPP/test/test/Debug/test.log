@@ -1,2 +1,3 @@
 ﻿  main.cpp
-f:\github\job\cpp\test\test\main.cpp(27): error C2065: “ret”: 未声明的标识符
+  test.vcxproj -> F:\GitHub\Job\CPP\test\Debug\test.exe
+  test.vcxproj -> F:\GitHub\Job\CPP\test\Debug\test.pdb (Partial PDB)

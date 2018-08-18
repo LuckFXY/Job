@@ -31,6 +31,7 @@ vector<TreeNode*> generateTrees(int n) {
 
     vector<vector<int>> result;
     result.emplace_back(unique_bst);
+	vector<TreeNode*> ret;
     int idx = n;
     for(int i=n-1; i>0; i--){
         idx -= 1;
@@ -42,4 +43,5 @@ vector<TreeNode*> generateTrees(int n) {
             }
         }
     }
+	return ret;
 }
