@@ -32,7 +32,7 @@ void fibonacci_sequence_test(){
             "1101111"
     };
     for(int i=0; i<8; i++){
-        cout<<"s="<<s[i]<<endl;
+		cout << "s=" << s[i].c_str() << endl;
         fibonacci_sequence(s[i]);
     }
 }

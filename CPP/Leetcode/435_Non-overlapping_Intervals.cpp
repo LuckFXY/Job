@@ -19,7 +19,8 @@ bool compare(const Interval &src, const Interval &dst){
     return src.end > dst.end;
 }
 ostream& operator<<(ostream& out, const Interval& src){
-    cout<<src.start<<' '<<src.end;
+    out<<src.start<<' '<<src.end;
+	return out;
 }
 void test_input(vector<Interval>& intervals){
     string s ="[1,2], [2,3]";

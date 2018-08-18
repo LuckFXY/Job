@@ -1,53 +1,26 @@
-//#include "share.h"
-
-#include <vector>
 #include <iostream>
-#include<queue>
+#include <vector>
 using namespace std;
-
-struct TreeNode {
-
-	int val;
-	TreeNode *left;
-	TreeNode *right;
-
-	TreeNode(int x) {
-		val = x;
-		left = nullptr;
-		right = nullptr;
-	}
-};
-
-void struct_core(vector<int>& nums, int left, int right, TreeNode *&root) {
-
-	if (left > right)
-		root =  NULL;
-	else if (left == right) {
-		root = new TreeNode(nums[left]);
-	}
-
-	else{
-		int max = left;
-		for (int i = left + 1; i<= right; i++) {
-			if (nums[i] > nums[max])
-				max = i;
-		}
-		root = new TreeNode(nums[max]);
-		struct_core(nums, left, max - 1, root->left);
-		struct_core(nums, max + 1, right, root->right);
-	}
-}
-TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
-	TreeNode * root;
-	struct_core(nums, 0, nums.size() - 1, root);
-	return root;
-}
 int main() {
-
-	//fans_group();
-	//merge_overlap();
-	int arr[] = { 3,2,1,6,0,5 };
-	vector<int> nums(arr, arr + 6);
-	constructMaximumBinaryTree(nums);
+	//deduplicate_overlapping();
+	//preimageSizeFZF_test();
+	//fibonacci_sequence_test();
+	vector<vector<int>> dp;
+	int cnt = 0;
+	for (int i = 0; i<4; i++) {
+		dp.emplace_back(vector<int>());
+		for (int j = 0; j <= i; j++) {
+			dp[i].emplace_back(cnt);
+			cnt += 1;
+		}
+		
+	}
+	cout << "ok" << endl;
+	for (int i = 0; i<4; i++) {
+		for (int j = 0; j <= i; j++) {
+			cout << dp[i][j] << ' ';
+		}
+		cout << endl;
+	}
 	return 0;
 }
