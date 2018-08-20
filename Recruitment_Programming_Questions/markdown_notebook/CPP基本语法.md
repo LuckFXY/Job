@@ -1,4 +1,4 @@
-# 1. 输入
+输入
 
 ## 1.1 输入一个行由空格分割的数字
 
@@ -109,11 +109,63 @@ int main(){
 
 # 2. 常用的算法
 
+#include <alogrithm>
+
 ## 2.1 sort
 
-## 2.2 max_element
+sort(begin ,start, custom_compare_fucntion)
 
+## 2.2 返回边界值的函数
 
+### 2.2.1 无序序列最值
+
+1. max_element(v.begin(), v.end()) 返回第一个最大值的地址
+2. min_element(v.begin(), v.end()) 返回第一个最小值的地址
+
+### 2.2.2 有序序列重复元素上下界
+
+非递减序列[first,last)
+
+![lower_bound](../img/lower_bound.png)
+
+1. lower_bound(begin, end, key) 第一个大于等于key的元素位置
+2. upper_bound(begin, end, key) 第一个大于key的元素位置
+
+## 2.3 Priority_Queue
+
+template<typename _Tp,
+             typename _Sequence = vector<_Tp>,
+             typename _Compare  = less<typename _Sequence::value_type> >
+
+第一个参数 _Tp： 指定存储的类型名称；
+
+第二个参数 _Sequence： 指定存储的数据结构，该结果必须支持随机存取迭代器；
+
+第三个参数 _Compare ： 比较函数，对于自定义类型有两种方法实现大小顶堆，第一个是重载操作符，第二个是写一个结构实现比较。
+
+```cpp
+// 默认是最大堆
+priority_queue<int,vector<int>> pqueue_int;
+for(int i = 0 ; i < 10 ; ++i){
+    pqueue_int.push(rand()%100);
+}
+while(!(pqueue_int.empty()))
+{
+    cout<<pqueue_int.top()<<"\t";
+    pqueue_int.pop();
+}
+cout<<endl;
+//最小堆
+template<typename _Tp>
+struct mygreater
+{
+    bool
+    // 当新元素 __y 小于父节点 __x，向上调整
+    operator()(const _Tp& __x, const _Tp& __y) const
+    { return __x > __y; }
+};
+priority_queue<int,vector<int>,mygreater<int>> pqueue_int;
+```
 
 # 3. 常用的数据结构
 
