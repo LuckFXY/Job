@@ -319,7 +319,7 @@ public:
 
 我们可以通过对基类成员变量求偏移来观察:
 
-![img](/media/fxy/study/GitHub/Job/Recruitment_Programming_Questions/img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/9-3.png)
+![img](../img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/9-3.png)
 
 可以看到:
 
@@ -336,7 +336,7 @@ public:
 
 现在类的布局情况:
 
-![img](/media/fxy/study/GitHub/Job/Recruitment_Programming_Questions/img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/9-4.png)
+![img](../img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/9-4.png)
 
 那么, 如果两个基类都没有虚函数表呢?
 
@@ -370,13 +370,13 @@ public:
 
 前面吃了个亏, 现在先来看看VS的基本布局:
 
-![img](/media/fxy/study/GitHub/Job/Recruitment_Programming_Questions/img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/10-1.png)
+![img](../img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/10-1.png)
 
 可以看到, 现在__vfptr已经独立出来了, 不再属于Base1和Base2!
 
 看看求偏移情况:
 
-![img](/media/fxy/study/GitHub/Job/Recruitment_Programming_Questions/img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/10-2.png)
+![img](../img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/10-2.png)
 
 注意高亮的那两行, `&d1==&d1.__vfptr`, 说明虚函数始终在最前面!
 
@@ -388,7 +388,7 @@ public:
 
 只需要看看偏移就行了:
 
-![img](/media/fxy/study/GitHub/Job/Recruitment_Programming_Questions/img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/11-1.png)
+![img](../img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/11-1.png)
 
 只需知道: 谁有虚函数表, 谁就往前靠!
 
