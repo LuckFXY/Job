@@ -195,7 +195,9 @@ pd1->derive1_fun1();
 
 ![img](../img/CPP基础知识/7-3.png)
 
-### 1.4.4多继承且存在虚函数覆盖又自身定义的虚函数的类对象布局
+## 1.5 多继承
+
+### 1.5.1存在覆写、自身有虚函数
 
 ```cpp
 class Base1
@@ -237,7 +239,12 @@ public:
 
 初步了解一下对象大小及偏移信息:
 
-![img](../img/CPP基础知识/8-1.png)
+| sizeof(Derive1)                       |  32  |
+| :------------------------------------ | :--: |
+| offsetof(Derive1, Derive1::base2_1)   |  16  |
+| offsetof(Derive1, Derive1::base2_2)   |  20  |
+| offsetof(Derive1, Derive1::derive1_1) |  24  |
+| offsetof(Derive1, Derive1::derive1_2) |  28  |
 
 貌似, 若有所思? 不管, 来看看VS再想:
 
@@ -257,33 +264,62 @@ pd1->derive1_fun2();
 ```
 
 ```asm
-; pd1->derive1_fun2();
-00995306  mov         eax,dword ptr [pd1]  
-00995309  mov         edx,dword ptr [eax]  
-0099530B  mov         esi,esp  
-0099530D  mov         ecx,dword ptr [pd1]  
-00995310  mov         eax,dword ptr [edx+0Ch]  
-00995313  call        eax
+;	Derive1* pd1 = &d;
+00A01A6B  lea         eax,[d]  
+00A01A6E  mov         dword ptr [pd1],eax  
+;	pd1->base1_fun1();
+01001A71  mov         eax,dword ptr [pd1]  
+01001A74  mov         edx,dword ptr [eax]  
+01001A76  mov         esi,esp  
+01001A78  mov         ecx,dword ptr [pd1]  
+01001A7B  mov         eax,dword ptr [edx]  
+01001A7D  call        eax  
+01001A7F  cmp         esi,esp  
+01001A81  call        __RTC_CheckEsp (01001195h)
+;   pd1->base1_fun2(); 以下省略相同的部分
+01001A90  mov         eax,dword ptr [edx+4] 
+;   pd1->derive1_fun1();
+01001AA6  mov         eax,dword ptr [edx+8] 
+;   pd1->derive1_fun2();
+01001ABC  mov         eax,dword ptr [edx+0Ch]
+;   pd1->base2_fun1();
+00F61AC8  mov         ecx,dword ptr [pd1]  
+00F61ACB  add         ecx,0Ch  
+00F61ACE  mov         eax,dword ptr [pd1]  
+00F61AD1  mov         edx,dword ptr [eax+0Ch]  
+00F61AD4  mov         esi,esp  
+00F61AD6  mov         eax,dword ptr [edx]  
+00F61AD8  call        eax  
+00F61ADA  cmp         esi,esp  
+00F61ADC  call        __RTC_CheckEsp (0F61195h)  
+;    pd1->base2_fun2();
+00F61AE1  mov         ecx,dword ptr [pd1]  
+00F61AE4  add         ecx,0Ch  
+00F61AE7  mov         eax,dword ptr [pd1]  
+00F61AEA  mov         edx,dword ptr [eax+0Ch]  
+00F61AED  mov         esi,esp  
+00F61AEF  mov         eax,dword ptr [edx+4]  
+00F61AF2  call        eax  
+00F61AF4  cmp         esi,esp  
+00F61AF6  call        __RTC_CheckEsp (0F61195h)  
 ```
 
 **Derive1的虚函数表依然是保存到第1个拥有虚函数表的那个基类的后面的.**
 
 ![img](../img/CPP基础知识/8-3.png)
 
-### 1.4.5 多继承，但是基类没有虚函数，自己定义虚函数的
+### 1.5.2 基类没有虚函数，自己定义虚函数
 
-去掉1.4.4 中base1 中的虚函数。
+去掉1.5.1 中base1 中的虚函数。
 
 ```
-class Base1
-{
+class Base1{
 public:
     int base1_1;
     int base1_2;
 };
 
-class Base2
-{
+class Base2{
 public:
     int base2_1;
     int base2_2;
@@ -291,14 +327,12 @@ public:
     virtual void base2_fun1() {}
     virtual void base2_fun2() {}
 };
-
 // 多继承
 class Derive1 : public Base1, public Base2
 {
 public:
     int derive1_1;
     int derive1_2;
-
     // 自身定义的虚函数
     virtual void derive1_fun1() {}
     virtual void derive1_fun2() {}
@@ -323,14 +357,14 @@ public:
 
 可以看到:
 
-```
-&d1==0x~d4
-&d1.Base1::__vfptr==0x~d4
-&d1.base2_1==0x~d8
-&d1.base2_2==0x~dc
-&d1.base1_1==0x~e0
-&d1.base1_2==0x~e4
-```
+| sizeof(Derive1)                       | 28   |
+| ------------------------------------- | ---- |
+| offsetof(Derive1, Derive1::base1_1)   | 12   |
+| offsetof(Derive1, Derive1::base1_2)   | 16   |
+| offsetof(Derive1, Derive1::base2_1)   | 4    |
+| offsetof(Derive1, Derive1::base2_2)   | 8    |
+| offsetof(Derive1, Derive1::derive1_1) | 20   |
+| offsetof(Derive1, Derive1::derive1_2) | 24   |
 
 所以不难验证: 我们前面的推断是正确的, **谁有虚函数表, 谁就放在前面!**
 
@@ -341,20 +375,16 @@ public:
 那么, 如果两个基类都没有虚函数表呢?
 
 ```
-class Base1
-{
+class Base1{
 public:
     int base1_1;
     int base1_2;
 };
-
-class Base2
-{
+class Base2{
 public:
     int base2_1;
     int base2_2;
 };
-
 // 多继承
 class Derive1 : public Base1, public Base2
 {
@@ -372,19 +402,27 @@ public:
 
 ![img](../img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/10-1.png)
 
-可以看到, 现在__vfptr已经独立出来了, 不再属于Base1和Base2!
+可以看到, 现在__vfptr已经独立出来了, 不再属于Base1和Base2! 
 
-看看求偏移情况:
+回顾汇编中语句
+
+```asm
+;	pd1->derive1_fun1();
+009A1CF8  mov         eax,dword ptr [pd1]  
+009A1CFB  mov         edx,dword ptr [eax] 
+```
+
+或者求偏移情况: 注意高亮的那两行, `&d1==&d1.__vfptr`, 
 
 ![img](../img/CPP%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/10-2.png)
 
-注意高亮的那两行, `&d1==&d1.__vfptr`, 说明虚函数始终在最前面!
+**说明虚函数始终在最前面!**
 
 对象布局:
 
 ![img](../img/CPP基础知识/10-3.png)
 
-### 1.4.6 如果有三个基类: 虚函数表分别是有, 没有, 有!
+### 1.5.3 如果有三个基类: 虚函数表分别是有, 没有, 有!
 
 只需要看看偏移就行了:
 
@@ -392,7 +430,7 @@ public:
 
 只需知道: 谁有虚函数表, 谁就往前靠!
 
-## 1.5 C++中父子对象指针间的转换与函数调用
+### 1.5.4 C++中父子对象指针间的转换与函数调用
 
 由于继承完全拥有父类的所有, 包括数据成员与虚函数表, 
 
@@ -414,21 +452,139 @@ public:
 1. 如果不是虚函数, 直接调用指针对应的基本类的那个函数
 2. 如果是虚函数, 则查找虚函数表, 并进行后续的调用. 虚函数表在定义一个时, 编译器就为我们创建好了的. 所有的, 同一个类, 共用同一份虚函数表.
 
-## 1.6 抽象类
+## 1.6 虚继承
 
-抽象类是一种特殊的类，它是为了抽象和设计的目的为建立的，它处于继承层次结构的较上层。
+问题1
 
-### 1.6.1 抽象类的定义：
+```
+class Base1{
+public:
+	int base1_1;
+	int base1_2;
+	virtual void base1_fun1() {}
+	virtual void base1_fun2() {}
+};
+class Derive1 : virtual public Base1{
+public:
+	int derive1_1;
+	int derive1_2;
+	// 自身定义的虚函数
+	virtual void derive1_fun1() {}
+	virtual void derive1_fun2() {}
+};
+// 下面语句 编译报错： 读取位置 0x00000004 时发生访问冲突。
+cout << offsetof(Derive1, Derive1::base1_1) << endl; 
+```
 
-称带有纯虚函数的类为抽象类。
+问题2 Diamond
 
-### 1.6.2 抽象类的作用
+```
+class A{
+public:
+      A (int x) :  m_x(x) {}
+      int m_x;     
+};
+class B : public A {
+public:
+      B (int x) : A(x) {}
+      void set(int x) {
+            this -> m_x = x;
+      }
+};
+class C : public A {
+public:
+      C (int x) : A(x) {}
+      int get(void) {
+            return this -> m_x;
+      }
+};
+class D : public B,public C {
+public:
+      D (int x) : B(x),C(x) {}
+};
+int main(void) {
+     D d(10);
+     d.set(20);
+     cout << d.get() << endl;
+     return 0;
+}
+```
+
+这样的运行结果是10？还是20呢？结果是10，为什么？明明sets的是20,为什么get的还是10呢？ 
+
+![baca_confusion](../img/baca_confusion.png)
+
+```
+我们需要按如下方式修改代码：
+class B : virtual public A //虚继承
+class C : virtual public A //虚继承
+D(int x) : B(x),C(x),A(x) {}
+```
+
+在这个过程中，**A对象只在D的初始化表中**A（x）进行构造（虚基类最先被构造），
+
+而在B和C的初始化表中不再对A进行构造（实际上是都有一个指针指向了D中的A（x）,来对A进行构造）。 
+
+### 1.6.1 虚继承与普通继承的区别:
+
+假设derived 继承自base类，那么derived与base是一种“is a”的关系，即derived类是base类，而反之错误；
+
+假设derived 虚继承自base类，那么derivd与base是一种“has a”的关系，即derived类有一个指向base类的vptr。
+
+```cpp
+class stream{
+public:
+    stream(){cout<<"stream::stream()!"<<endl;}
+};
+class iistream:virtual stream{
+public:
+    iistream(){cout<<"istream::istream()!"<<endl;}
+};
+class oostream:virtual stream{
+public:
+    oostream(){cout<<"ostream::ostream()!"<<endl;}
+};
+class iiostream:public iistream,public oostream{
+public:
+    iiostream(){cout<<"iiostream::iiostream()!"<<endl;}
+};
+int main(int argc, const char * argv[]){
+    iiostream oo;
+｝
+/*
+程序运行的输出结果为：
+stream::stream()!
+istream::istream()!
+ostream::ostream()!
+iiostream::iiostream()!  */
+```
+
+### 1.6.2 规则
+
+**1.最上层派生类的构造函数负责调用虚基类子对象的构造函数。所有虚基类子对象会按照深度优先、从左到右的顺序进行初始化；**
+
+**2.直接基类子对象按照它们在类定义中声明的顺序被一一构造起来；**
+
+**3.非静态成员子对象按照它们在类定义体中的声明的顺序被一一构造起来；**
+
+**4.最上层派生类的构造函数体被执行**
+
+
+
+## 虚函数与多态
+
+### 1.7.1 抽象类
+
+* 称带有纯虚函数的类为抽象类。它为了抽象和设计的目的为建立的，它处于继承层次结构的较上层。
+
+* 继承纯虚函数必须实现，空实现也行，否则它也是一个抽象类。
+* 继承虚函数可以实现多态，否则基类无法调用子类的函数，如析构函数。
+
+### 1.7.2 抽象类的作用
 
 抽象类的主要作用是将有关的操作作为结果接口组织在一个继承层次结构中，由它来为派生类提供一个公共的根，派生类将具体实现在其基类中作为接口的操作。所以派生类实际上刻画了一组子类的操作接口的通用语义，这些语义也传给子类，子类可以具体实现这些语义，也可以再将这些语义传给自己的子类。
 
-## 1.7 虚函数与多态
 
-### 1.7.1 基础知识
 
 声明虚函数的目的在于，使派生类继承函数的接口和缺省实现。
 
@@ -842,7 +998,15 @@ int main(){
 | 函数重载             | 允许                                  | 不允许                               |
 | 构造函数与析构函数   | 调用                                  | 不调用                               |
 
+拷贝构造函数
 
+拷贝构造函数是一种**特殊的**构造函数**，函数的名称必须和类名称一致，它必须的一个参数是本类型的一个**引用变量。
 
+在C++中，下面三种对象需要调用拷贝构造函数！ 
 
+1. 对象以值传递的方式传入函数参数
+2. 对象以值传递的方式从函数返回
+3. 对象需要通过另外一个对象进行初始化；
+
+**默认拷贝构造函数**
 

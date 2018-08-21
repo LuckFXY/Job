@@ -4,7 +4,7 @@
 
 虽然这个计划才刚刚开始，希望自己能坚持下去
 
-1. [2018各个企业笔试真题练习](./Recruitment_Programming_Questions) （doing）
+1. [2018各个企业笔试真题练习](./机试_面试考题) （doing）
 2. [剑指offer习题练习](./Pointing_offer) (mess)
 3. [西瓜书编程练习](./watermelon_practice)(suspended)
 
