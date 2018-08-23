@@ -1,122 +1,107 @@
+//
+// Created by fxy on 18-8-22.
+//
 
-//int walk(map<int, PAIR> graph, int start){
-//    int total = 0;
-//    vector<int> stack;
-//    stack.emplace_back(start);
-//    int cur;
-//    while(!stack.empty()){
-//        cur = stack.back();
-//        stack.pop_back();
-//
-//    }
-//}
-//int main() {
-//
-//    int n, m, a, b;
-//    cin >> n >> m;
-//    vector<int> weight(n);
-//    for(int i=0; i<n ;i++){
-//        cin>>weight[i];
-//    }
-//    map<int, map<int, int>> graph;
-//
-//    for(int i=0; i<m; i++){
-//        cin>>a >> b;
-//        graph.insert(a, map(b,weight[i]))
-//    }
-//
-//    int nmax = 0, nweight = 0;
-//
-//    return 0;
-//}
-
-//#include <iostream>
-//#include <stdio.h>
-//#include <map>
-//#include <vector>
-//#include <string>
-//using namespace std;
-//int main(){
-//
-//    map<int , map<int, int>> graph;
-//    vector<vector<int>> data={
-//            {0,1},
-//            {0,5},
-//            {1,2},
-//            {1,3},
-//            {2,3},
-//            {3,4},
-//            {3,5}
-//    };
-//    int weight[6] = {2,8,3,5,6,1};
-//    for(int i=0; i<6; i++){
-//        int start = data[i][0], end = data[i][1];
-//        if(graph.find(start) == graph.end()){
-//            graph.insert(
-//                    make_pair(
-//                            start, map<int, int>()
-//                    ));
-//            graph[start][end] = weight[end];
-//        }
-//        else{
-//            map<int, int>& inner = graph[start];
-//            inner.insert(make_pair(end, weight[end]));
-//        }
-//    }
-//
-//    for(auto it = graph.begin(); it != graph.end(); it++){
-//        printf("%d : ", (*it).first);
-//        for(auto jt = (*it).second.begin(); jt != (*it).second.end(); jt++ ){
-//            printf("(%d %d) ",(*jt).first, (*jt).second);
-//        }
-//        cout<<endl;
-//    }
-//    return 0;
-//}
-#include <stdio.h>
 #include <iostream>
 using namespace std;
+int test1(){
+    int n;
+    float val;
+    float a, b, ret;
+    while(cin >> n >> val){
+        a = n * val;
+        if(n>=3)
+            a *= 0.7;
+        if(a >= 50){
+            a -= 10;
+        }
 
-
-class Person {
-public:
-    Person(const string& name, int age) : m_name(name), m_age(age) {}
-    int a = 123;
-    void ShowInfo() {
-        cout << "姓名：" << m_name << endl;
-        cout << "年龄：" << m_age << endl;
+        b = n * val;
+        if(b >= 10)
+            b -= 2;
+        b += 6;
+        if(b >= 105)
+            b -= 6;
+        cout<<a <<' '<<b<<endl;
+        ret = a-b;
+        if(ret == 0)
+            printf("0");
+        else if(ret > 0)
+            printf("2");
+        else
+            printf("1");
     }
+    return 0 ;
+}
+#include <vector>
+#include <string>
 
-protected:
-    string  m_name;     //姓名
+int check(string s, int start, int end){
+    int n=0;
+    vector<char> stack;
+    for(int i=start; i<end; i++){
+        if(s[i] == '(')
+            stack.emplace_back('(');
+        else if(s[i] == ')'){
 
-private:
-    int     m_age;      //年龄
-};
-
-class Teacher : private Person
-{
-public:
-    Teacher(const string& name, int age, const string& title)
-            : Person(name, age), m_title(title)
-    {
+            char left = '0';
+            if(!stack.empty())
+                left = stack.back();
+            if(left == '('){
+                stack.pop_back();
+                n += 1;
+            }
+            else
+                break;
+        }
+        else
+            break;
     }
+    return n*2;
+}
+int test2(){
+    string s = "(()()())(())(())";
+    while(cin >> s){
+        int max = 0;
+        vector<int> a(0, s.size());
+        int start=0, last = s.size();
+        while(start < last ){
+            int n = check(s,start,s.size());
+            start = start + 1;
 
-    void ShowTeacherInfo()
-    {
-        ShowInfo();                             //正确，public属性子类可见
-        cout << "姓名：" << m_name << endl;        //正确，protected属性子类可见
-        //cout << "年龄：" << m_age << endl;     //错误，private属性子类不可见
-
-        cout << "职称：" << m_title << endl;   //正确，本类中可见自己的所有成员
+            max = n > max ? n : max;
+        }
+        cout<<max<<endl;
     }
-
-private:
-    string  m_title;        //职称
-};
+    return 0;
+}
 int main(){
+    string s = "ABABCABCDABCDEABCDEF";
+    vector<int> next(s.size()+1, 0);
+    int i=1, k=0;
+    int max_idx = 0;
+    for(i = 1 ; i< s.size(); i++) {
+        k=0;
+        next.clear();
+        while (i < s.size()) {
+            if (s[i] == s[k]) {
+                i += 1;
+                k += 1;
+                next[i] = k;
+                max_idx = next[i] > next[max_idx] ? i : max_idx;
+            } else if (k == 0) {
+                i += 1;
+            } else
+                k = next[k];
+        }
+        for (int i = 0; i < next.size(); i++) {
+            cout << next[i] << ' ';
+        }
+        cout << endl;
 
-    for(int i=1; i<15; i++){
-        printf("%d mod %d = %d\n", i, 15, i% 15);
+        int length = next[max_idx];
+
+        cout << s.substr(max_idx - next[max_idx], length) << ' ' << length << endl;
     }
+    return 0;
 }
