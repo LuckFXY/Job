@@ -52,12 +52,12 @@ int maxValue_ops_one(int n, int volume, vector<int> cost, vector<int> weight){
         cout<< dp <<endl;
     }
 }
-int main(){
-    int _cost[] = {2,3,3,4,6};
-    int _weight[] = {1,2,5,9,4};
-    int N = sizeof(_cost) / sizeof(int);
-    vector<int> cost(_cost, _cost+N);
-    vector<int> weight(_weight, _weight+N);
-    maxValue_ops_one(N, 10, cost, weight);
-    return 0;
-}
+//int main(){
+//    int _cost[] = {2,3,3,4,6};
+//    int _weight[] = {1,2,5,9,4};
+//    int N = sizeof(_cost) / sizeof(int);
+//    vector<int> cost(_cost, _cost+N);
+//    vector<int> weight(_weight, _weight+N);
+//    maxValue_ops_one(N, 10, cost, weight);
+//    return 0;
+//}

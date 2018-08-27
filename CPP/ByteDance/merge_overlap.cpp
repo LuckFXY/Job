@@ -4,7 +4,7 @@
 #include "share.h"
 #include<algorithm>
 #include<sstream>
-
+using namespace std;
 void test_input(vector<PAIR>& intervals){
     string s[] ={
       "0,1;2,9;10,16;20,30",
@@ -47,7 +47,7 @@ void merge_overlap() {
             output.emplace_back(it);
             last = &(*it);
         }
-        else if((*it).second > (*last).second)){
+        else if( (*it).second > (*last).second ){
             (*last).second = (*it).second;
         }
     }

@@ -109,7 +109,7 @@ int main(){
 
 # 2. 常用的算法
 
-#include <alogrithm>
+include <alogrithm>
 
 ## 2.1 sort
 
@@ -164,8 +164,33 @@ struct mygreater
     operator()(const _Tp& __x, const _Tp& __y) const
     { return __x > __y; }
 };
+greater<int> 为系统函数
 priority_queue<int,vector<int>,mygreater<int>> pqueue_int;
 ```
+
+## 2.4 从迭代器中删除
+
+```cpp
+//一重循环
+for (auto it = data.begin(); it != data.end();){
+    if(条件满足)
+        it = data.erase(it);
+    else
+        it += 1；
+}
+// 两重循环
+for (auto it = data.begin(); it != data.end(); it++) {
+        auto jt = it + 1;
+        while(jt != data.end()) {
+            if (条件满足) 
+                jt = data.erase(jt);
+            else 
+                jt++;
+        }
+}
+```
+
+
 
 # 3. 常用的数据结构
 

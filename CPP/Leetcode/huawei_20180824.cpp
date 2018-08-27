@@ -75,7 +75,7 @@ int test2(){
     }
     return 0;
 }
-int main(){
+int test3(){
     string s = "ABABCABCDABCDEABCDEF";
     vector<int> next(s.size()+1, 0);
     int i=1, k=0;

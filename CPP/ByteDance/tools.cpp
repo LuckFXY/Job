@@ -10,14 +10,24 @@
 bool less_pair ( PAIR& src,  PAIR& dst) {
     return src.first <= dst.first;
 }
-
-void mprint(const vector<vector<int>>& matrix){
+template <typename T>
+void mprint(const vector<vector<T>>& matrix){
     for(auto it = matrix.begin(); it!=matrix.end(); it++){
         for(auto jt = (*it).begin(); jt != (*it).end(); jt++)
             cout<<(*jt)<<' ';
         cout<<endl;
     }
 }
+
+template <typename T>
+ostream & operator<<(ostream& out, const vector<T> &vec){
+    for(auto it = vec.begin(); it!=vec.end(); it++){
+        out<<(*it)<<' ';
+    }
+    out<<'\b';
+    return out;
+}
+
 void str2matrix(string str_arr[], vector<vector<int>>& matrix){
 
     int m=10, n =10;
