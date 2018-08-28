@@ -1,29 +1,31 @@
 #include <iostream>
 #include <vector>
-#include<map>
-#include<set>
 using namespace std;
+typedef unsigned long long ULL;
+void num2arr(vector<int>& arr, ULL num){
+    for(int i=0; i<64; i++){
+        arr[i] = (num & 1) == 0 ? 0 : 1;
+        num = num >> 1;
+    }
+}
+
 
 int main() {
-    int n, m, idx;
-    cin >> n >> m;
-    vector<int> data(m+1,0);
-    for (int i = 1; i <= n; i++) {
-        cin >> idx;
-        data[idx] = 1;
-    }
-    cin >> n;
-
-    int left, right;
-    set<int> ret;
-    for (int i = 0; i < n; i++) {
-        cin >> left >> right;
-        ret.clear();
-        for (int j = left; j <= right; j++) {
-            if (data[j] == 1)
-                ret.insert(j);
+    ULL x = 0b100100;
+    //  y = 0b0__0__
+    ULL k = 5;
+    ULL y = ~x;
+    ULL mask = 1;
+    vector<int> candidate(64, 0);
+    num2arr(candidate, k);
+    int idx =0;
+    for(int i=0; i<64; i++){
+        if((x & mask)==0){
+            if(candidate[idx] == 0)
+                x = x | mask;
+            idx += 1;
         }
-        cout << ret.size() << endl;
+        mask = mask >> 1;
     }
-    return 0;
+
 }
