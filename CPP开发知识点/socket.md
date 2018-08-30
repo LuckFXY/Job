@@ -12,11 +12,11 @@
 ## 2. socket通信过程简单描述
 
 ### 2.1 TCP级别
-![tcp_socket](..\img\tcp_socket.gif)
+![tcp_socket](../img/tcp_socket.gif)
 
 ### 2.2 socket级别
 
-![tcp_socket](F:\GitHub\Job\img\socket_communicate_process.jpg)
+![tcp_socket](../img/socket_communicate_process.jpg)
 
 ## 3.  socket的基本操作
 
@@ -85,17 +85,13 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 
 ### 3.6、read()、write()函数等
 
+```
 read()/write()
-
 recv()/send()
-
 readv()/writev()
-
 recvmsg()/sendmsg()
-
 recvfrom()/sendto()
-
-
+```
 
 - read函数是负责从fd中读取内容.当读成功时，read返回实际所读的字节数，如果返回的值是0表示已经读到文件的结束了，小于0表示出现了错误。如果错误为EINTR说明读是由中断引起的，如果是ECONNREST表示网络连接出了问题。
 - write函数将buf中的nbytes字节内容写入文件描述符fd.成功时返回写的字节数。失败时返回-1，并设置errno变量。 在网络程序中，当我们向套接字文件描述符写时有俩种可能。1)write的返回值大于0，表示写了部分或者是全部的数据。2)返回的值小于0，此时出现了错误。我们要根据错误类型来处理。如果错误为EINTR表示在写的时候出现了中断错误。如果为EPIPE表示网络连接出现了问题(对方已经关闭了连接)。

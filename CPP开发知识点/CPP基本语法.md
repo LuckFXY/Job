@@ -621,6 +621,7 @@ int main(){
 
 **string类的替换函数：**
 
+```
  string &replace(int p0, int n0,const char *s);//删除从p0开始的n0个字符，然后在p0处插入串s
 string &replace(int p0, int n0,const char *s, int n);//删除p0开始的n0个字符，然后在p0处插入字符串s的前n个字符
 string &replace(int p0, int n0,const string &s);//删除从p0开始的n0个字符，然后在p0处插入串s
@@ -631,24 +632,36 @@ string &replace(iterator first0, iterator last0,const char *s, int n);//把[firs
 string &replace(iterator first0, iterator last0,const string &s);//把[first0，last0）之间的部分替换为串s
 string &replace(iterator first0, iterator last0,int n, char c);//把[first0，last0）之间的部分替换为n个字符c
 string &replace(iterator first0, iterator last0,const_iterator first, const_iterator last);//把[first0，last0）之间的部分替换成[first，last）之间的字符串
+```
 
-**string类的插入函数：** string &insert(int p0, const char *s);
+**string类的插入函数：**
+```
+string &insert(int p0, const char *s);
 string &insert(int p0, const char *s, int n);
 string &insert(int p0,const string &s);
 string &insert(int p0,const string &s, int pos, int n);
 //前4个函数在p0位置插入字符串s中pos开始的前n个字符
+
 string &insert(int p0, int n, char c);//此函数在p0处插入n个字符c
 iterator insert(iterator it, char c);//在it处插入字符c，返回插入后迭代器的位置
 void insert(iterator it, const_iterator first, const_iterator last);//在it处插入[first，last）之间的字符
 void insert(iterator it, int n, char c);//在it处插入n个字符c
+```
+**string类的删除函数** 
+```
+iterator erase(iterator first, iterator last);
+//删除[first，last）之间的所有字符，返回删除后迭代器的位置
 
-**string类的删除函数** iterator erase(iterator first, iterator last);//删除[first，last）之间的所有字符，返回删除后迭代器的位置
-iterator erase(iterator it);//删除it指向的字符，返回删除后迭代器的位置
+iterator erase(iterator it);
+//删除it指向的字符，返回删除后迭代器的位置
+
 string &erase(int pos = 0, int n = npos);//删除pos开始的n个字符，返回修改后的字符串
+```
+**string类的迭代器处理：**
 
-**string类的迭代器处理：** string类提供了向前和向后遍历的迭代器iterator，迭代器提供了访问各个字符的语法，类似于指针操作，迭代器不检查范围。
+ string类提供了向前和向后遍历的迭代器iterator，迭代器提供了访问各个字符的语法，类似于指针操作，迭代器不检查范围。用string::iterator或string::const_iterator声明迭代器变量，const_iterator不允许改变迭代的内容。常用迭代器函数有：
 
-用string::iterator或string::const_iterator声明迭代器变量，const_iterator不允许改变迭代的内容。常用迭代器函数有：
+```
 const_iterator begin()const;
 iterator begin();                //返回string的起始位置
 const_iterator end()const;
@@ -658,9 +671,12 @@ iterator rbegin();                //返回string的最后一个字符的位置
 const_iterator rend()const;
 iterator rend();                    //返回string第一个字符位置的前面
 rbegin和rend用于从后向前的迭代访问，通过设置迭代器string::reverse_iterator,string::const_reverse_iterator实现
+```
 
 **字符串流处理：** 通过定义ostringstream和istringstream变量实现，<sstream>头文件中
 **例如：**
+
+```
 string input("hello,this is a test");
 istringstream is(input);
 string s1,s2,s3,s4;
@@ -668,3 +684,5 @@ is>>s1>>s2>>s3>>s4;//s1="hello,this",s2="is",s3="a",s4="test"
 ostringstream os;
 os<<s1<<s2<<s3<<s4;
 cout<<os.str();
+```
+
