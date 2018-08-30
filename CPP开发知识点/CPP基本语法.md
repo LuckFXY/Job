@@ -151,7 +151,7 @@ for(int i = 0 ; i < 10 ; ++i){
 }
 while(!(pqueue_int.empty()))
 {
-    cout<<pqueue_int.top()<<"\t";
+    cout<<pqueue_int.top()<<"/t";
     pqueue_int.pop();
 }
 cout<<endl;
