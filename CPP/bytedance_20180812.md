@@ -4,9 +4,9 @@
 
 ### 1. 球迷
 
-![img](img/bytedance20180812/1.png)
+![img](../img/bytedance20180812/1.png)
 
-![img](img/bytedance20180812/1-1.png)
+![img](../img/bytedance20180812/1-1.png)
 
 > ```
 > #include <set>
@@ -69,9 +69,9 @@
 
 ### 2. 文章病句标识（合并区间）
 
-![img](img/bytedance20180812/2.png)
+![img](../img/bytedance20180812/2.png)
 
-![img](img/bytedance20180812/2-1.png)
+![img](../img/bytedance20180812/2-1.png)
 
 > ```
 > #include<sstream>
@@ -136,11 +136,11 @@
 
 ### 3.4.5没有看
 
-![img](./img/tear.png)
+![img](../img/tear.png)
 
  ### 3. 积分卡牌游戏
 
-![img](img/bytedance20180812/3.png)
+![img](../img/bytedance20180812/3.png)
 
 ![img](img/bytedance20180812/3-1.png)
 
@@ -152,9 +152,9 @@
 
 ###  4.区间最大最小值 
 
-![img](img/bytedance20180812/4.png)
+![img](../img/bytedance20180812/4.png)
 
-![img](img/bytedance20180812/4-1.png)
+![img](../img/bytedance20180812/4-1.png)
 
 > 待填写
 >
@@ -162,11 +162,11 @@
 
 ### 5.直播间
 
-![img](img/bytedance20180812/5.png)
+![img](../img/bytedance20180812/5.png)
 
-![img](img/bytedance20180812/5-1.png)
+![img](../img/bytedance20180812/5-1.png)
 
-![img](img/bytedance20180812/5-2.png)
+![img](../img/bytedance20180812/5-2.png)
 
 > 待填写
 >
