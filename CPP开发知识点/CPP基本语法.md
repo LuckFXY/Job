@@ -111,6 +111,35 @@ int main(){
 
 include <alogrithm>
 
+## 2.0 自定义结构体重载比较运算符
+
+不说了，赛码网全是泪呀
+
+```cpp
+class pos{
+public:
+    int first;
+    int second;
+    pos(int a, int b){
+        first = a;
+        second = b;
+    }
+  friend bool operator < (pos& a, pos& b);
+  friend  bool operator < (pos& a, const pos& b);
+  friend bool operator < (const pos& a, const pos& b);
+};
+
+bool operator < ( pos& a,  pos& b){
+    return a.first < b.first;
+}
+bool operator < (const pos& a, const pos& b){
+    return a.first < b.first;
+}
+bool operator < (pos& a, const pos& b){
+    return a.first < b.first;
+}
+```
+
 ## 2.1 sort
 
 sort(begin ,start, custom_compare_fucntion)
@@ -189,8 +218,6 @@ for (auto it = data.begin(); it != data.end(); it++) {
         }
 }
 ```
-
-
 
 # 3. 常用的数据结构
 
