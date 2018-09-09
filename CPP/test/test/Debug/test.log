@@ -1,3 +1,9 @@
 ﻿  main.cpp
+f:\github\job\cpp\test\test\main.cpp(40): warning C4244: “初始化”: 从“long”转换到“float”，可能丢失数据
+f:\github\job\cpp\test\test\main.cpp(41): warning C4244: “参数”: 从“float”转换到“const long”，可能丢失数据
+f:\github\job\cpp\test\test\main.cpp(49): warning C4101: “total”: 未引用的局部变量
+f:\github\job\cpp\test\test\main.cpp(49): warning C4101: “max”: 未引用的局部变量
+f:\github\job\cpp\test\test\main.cpp(49): warning C4101: “min”: 未引用的局部变量
+f:\github\job\cpp\test\test\main.cpp(49): warning C4101: “num”: 未引用的局部变量
   test.vcxproj -> F:\GitHub\Job\CPP\test\Debug\test.exe
   test.vcxproj -> F:\GitHub\Job\CPP\test\Debug\test.pdb (Partial PDB)

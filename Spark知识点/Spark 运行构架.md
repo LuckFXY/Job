@@ -24,7 +24,9 @@
 
 ## 2.1  Spark运行架构包括:
 
-![图9-5-Spark运行架构](img/图9-5-Spark运行架构.jpg)
+![
+
+图9-5-Spark运行架构](img/图9-5-Spark运行架构.jpg)
 
 * 集群资源管理器（Cluster Manager）可以是Spark自带的资源管理器，也可以是YARN或Mesos等资源管理框架。
 

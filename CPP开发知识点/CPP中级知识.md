@@ -101,5 +101,66 @@ main()
 3. 申请了内存，使用完了却忘记了释放，导致内存泄露。它会慢慢地吞噬你的系统资源，直到你的程序彻底完蛋
 4. 你很小心地释放了内存，但是却又使用了它。由于程序很复杂或者调用顺序出错，这样可能导致出现上面的错误。
 
-# 2
+# 2 Dll入口函数参数详解
+
+https://blog.csdn.net/friendan/article/details/7659190
+
+DLL程序入口点函数：DllMain，注意：大小写是区别的(仅导出资源的DLL可以没有DllMain函数)。
+
+## 2.1 函数原型:
+
+```cpp
+BOOL APIENTRY DllMain( HMODULE hModule,
+                       DWORD  ul_reason_for_call,
+                       LPVOID lpReserved
+                     )
+{
+    return TRUE;
+}
+```
+
+### 参数意义:
+
+①hModule参数：指向DLL本身的实例句柄；
+
+②ul_reason_for_call参数：指明了DLL被调用的原因，可以有以下4个取值：
+
+## 2.2 DLL_PROCESS_ATTACH
+
+当DLL被进程 <<第一次>> 调用时，导致DllMain函数被调用，
+
+同时ul_reason_for_call的值为DLL_PROCESS_ATTACH，
+
+如果同一个进程后来再次调用此DLL时，操作系统只会增加DLL的使用次数，
+
+不会再用DLL_PROCESS_ATTACH调用DLL的DllMain函数。
+
+## 2.3 DLL_PROCESS_DETACH：
+
+当DLL被从进程的地址空间解除映射时，系统调用了它的DllMain，传递的ul_reason_for_call值是DLL_PROCESS_DETACH。
+★如果进程的终结是因为调用了TerminateProcess，系统就不会用DLL_PROCESS_DETACH来调用DLL的DllMain函数。这就意味着DLL在进程结束前没有机会执行任何清理工作。
+
+## 2.4 DLL_THREAD_ATTACH：
+
+当进程创建一线程时，系统查看当前映射到进程地址空间中的所有DLL文件映像，
+
+并用值DLL_THREAD_ATTACH调用DLL的DllMain函数。 
+
+新创建的线程负责执行这次的DLL的DllMain函数，
+
+只有当所有的DLL都处理完这一通知后，系统才允许线程开始执行它的线程函数。
+
+## 2.5 DLL_THREAD_DETACH：
+
+如果线程调用了ExitThread来结束线程（线程函数返回时，系统也会自动调用ExitThread），
+
+系统查看当前映射到进程空间中的所有DLL文件映像，
+
+并用DLL_THREAD_DETACH来调用DllMain函数，
+
+通知所有的DLL去执行线程级的清理工作。
+
+★注意：如果线程的结束是因为系统中的一个线程调用了TerminateThread，
+
+系统就不会用值DLL_THREAD_DETACH来调用所有DLL的DllMain函数。
 

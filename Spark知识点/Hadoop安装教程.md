@@ -17,7 +17,7 @@
 
    > sudo vim  /etc/sudoers.d/hadoop
    >
-   > #file context
+   > file context
    >
    > hadoop ALL=(ALL) ALL
 
@@ -27,7 +27,7 @@
 
 4. ### 配置远程登录
 
-   > #input pwd 
+   > input pwd 
    >
    > ssh localhost
    >
