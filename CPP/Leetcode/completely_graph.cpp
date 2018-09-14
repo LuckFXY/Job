@@ -4,14 +4,13 @@
 //
 
 #include<iostream>
-#include<cstdio>
 #include<vector>
 #include<set>
 #define FRE
 using namespace std;
 int T;
 int N, M;
-int main(){
+int completely_graph(){
 #ifdef FRE
     freopen("in.txt","r",stdin);
 #endif
