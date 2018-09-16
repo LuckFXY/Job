@@ -3,5 +3,5 @@ project(Leetcode)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES 123.cpp)
+set(SOURCE_FILES 123.cpp 456.cpp)
 add_executable(Leetcode ${SOURCE_FILES})

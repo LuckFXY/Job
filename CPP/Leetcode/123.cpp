@@ -1,50 +1,69 @@
 #include<iostream>
-#include<vector>
-#include<algorithm>
-#define max(a,b) ((a)>(b)?(a):(b))
-#define min(a,b) ((a)<(b)?(a):(b))
-struct node{
-    int first;
-    int second;
-    node(int a, int b){
-        first = a;
-        second = b;
-    }
-    friend bool operator< (const node &a, const node &b);
-};
+
 using namespace std;
-bool operator< (const node &a, const node &b){
-    if(a.first == b.first)
-        return a.second < b.second;
-    return a.first < b.first;
-}
-int main(){
-    int n, a, b;
-    vector<node> data;
-    while(cin >> n) {
-        if(n<=0) {
-            cout<<0<<endl;
-            continue;
-        }
-        int start=0x7fffffff;
-        int end=0;
-        data.clear();
-        for (int i = 0; i < n; i++) {
-            cin >> a >> b;
-            data.push_back(node(a,b));
-            start = min(start, a);
-            end = min(end, b);
-        }
-
-        sort(data.begin(), data.end());
-        int mcnt = 0;
-
-        for(auto it = data.begin(); it != data.end()-1; it++){
-            int cnt = 1;
-
-            mcnt = max(mcnt, cnt);
-        }
-        cout<<mcnt<<endl;
+struct list{
+    int e;
+    list* next;
+    list(){
+        e=0;
+        next = nullptr;
     }
+    list(int a){
+        e = a;
+        next= nullptr;
+    }
+};
+void reverse(list* &start, list* &end){
+    list* pre = start;
+    if(start != end && start->next != nullptr && end != nullptr){
+
+        list* ptr = start->next;
+        list* post;
+        pre->next = nullptr;
+        while(ptr != end){
+            post = ptr->next;
+            ptr->next = pre;
+            pre = ptr;
+            ptr = post;
+        }
+        end->next = pre;
+
+    }
+
+}
+int reverse_list(){
+    int k=0, a=0, n=0;
+    char ch=0;
+    scanf("%d%c", &a, &ch);
+    list* head = new list(a);
+    list* tail = head;
+    while(ch != '\n' && scanf("%d%c", &a, &ch)==2) {
+        list* one = new list(a);
+        tail->next = one;
+        tail = tail->next;
+    }
+    scanf("%d", &k);
+
+    list *ptr = head;
+    list* ptail= nullptr;
+    list* pptr= nullptr;
+    list* post=0;
+    tail = head;
+    int cnt=0;
+    while(tail != nullptr){
+        cnt += 1;
+        post = tail->next;
+        if(cnt % k == 0){
+            reverse(ptr, tail);
+            pptr = ptail;
+            ptr = tail;
+        }
+        if(pptr)
+            pptr->next = tail;
+        ptr->next = post;
+        ptail = tail;
+        tail = tail->next;
+    }
+
     return 0;
 }

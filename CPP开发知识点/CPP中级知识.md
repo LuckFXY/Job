@@ -164,3 +164,236 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 系统就不会用值DLL_THREAD_DETACH来调用所有DLL的DllMain函数。
 
+# 3 引用
+
+转载请注明出处。https://www.cnblogs.com/qicosmos/p/4283455.html 还有《程序员》2015年1月刊。
+
+## 3.1 右值引用
+
+区分左值和右值的一个简单办法是：看能不能对表达式取地址，如果能，则为左值，否则为右值。 
+
+在C++11中所有的值必属于左值、将亡值、纯右值三者之一 
+
+```
+int i = getVar(); 右值赋值完后消失
+T&& k = getVar(); //右值引用，k是右值的引用
+```
+
+通过右值引用，比之前少了一次拷贝构造和一次析构，原因在于右值引用绑定了右值，让临时右值的生命周期延长了。我们可以利用这个特点做一些性能优化，即避免临时对象的拷贝构造和析构 
+
+### 指针悬挂
+
+一个带有堆内存的类，必须提供一个深拷贝拷贝构造函数，因为默认的拷贝构造函数是浅拷贝，会发生“指针悬挂”的问题。 （一次是临时右值析构的时候删除一次，第二次外面构造的a对象释放时删除一次，而这两个对象的m_ptr是同一个指针，这就是所谓的指针悬挂问题 ）
+
+```c++
+class A{
+public:
+    A():m_ptr(new int(0)){cout << "construct" << endl;}
+    A(const A& a):m_ptr(new int(*a.m_ptr)){ //深拷贝的拷贝构造函数
+        cout << "copy construct" << endl;
+    }
+    ~A(){ delete m_ptr;}
+private:
+    int* m_ptr;
+};
+int main() {
+    A a = GetA();
+    return 0;
+}
+输出：
+construct
+copy construct
+copy construct
+```
+
+### 移动构造函数
+
+右值引用消除多余的拷贝
+
+```
+class A{
+public:
+    A() :m_ptr(new int(0)){}
+    A(const A& a):m_ptr(new int(*a.m_ptr)) {
+    //深拷贝的拷贝构造函数
+        cout << "copy construct" << endl;
+    }
+    A(A&& a) :m_ptr(a.m_ptr){
+        a.m_ptr = nullptr;
+        cout << "move construct" << endl;
+    }
+    ~A(){ delete m_ptr;}
+private:
+    int* m_ptr;
+};
+int main(){
+    A a = Get(false); 
+} 
+输出：
+construct
+move construct
+move construct
+```
+
+移动构造函数并没有做深拷贝，仅仅是将指针的所有者转移到了另外一个对象，同时，将参数对象a的指针置为空，这里仅仅是做了浅拷贝。
+
+可以用c++11的move去移动语义
+
+```c++
+{
+    std::list< std::string> tokens;
+    //省略初始化...
+    std::list< std::string> t = tokens; //这里存在拷贝 
+}
+std::list< std::string> tokens;
+std::list< std::string> t = std::move(tokens);  //这里没有拷贝
+```
+
+### 模板类的移动
+
+C++11之前调用模板函数时，存在一个比较头疼的问题，如何正确的传递参数 ,C++11引入了完美转发：在函数模板中，完全依照模板的参数的类型（即保持参数的左值、右值特征），将参数传递给函数模板中调用的另外一个函数。 
+
+```c++
+void processValue(int& a){ cout << "lvalue" << endl; }
+void processValue(int&& a){ cout << "rvalue" << endl; }
+template <typename T>
+void forwardValue(T&& val)
+{
+    processValue(std::forward<T>(val)); //照参数本来的类型进行转发。
+}
+void Testdelcl()
+{
+    int i = 0;
+    forwardValue(i); //传入左值 
+    forwardValue(0);//传入右值 
+}
+输出：
+lvaue 
+rvalue
+```
+
+# 4 智能指针
+
+https://www.cnblogs.com/QG-whz/p/4777312.html
+
+- 简化跟踪堆中（也即C++中new出来的）的对象的过程。一旦一个对象通过调用new被分配出来，记录谁拥有这个对象是很重要的，因为其所有者要负责对它进行delete。但是对象所有者可以有多个，且所有权能够被传递，这就使得内存跟踪变得困难。引用计数可以跟踪对象所有权，并能够自动销毁对象。可以说引用计数是个简单的垃圾回收体系。这也是本文的讨论重点。
+
+```cpp
+#include<iostream>
+using namespace std;
+
+class Point
+{
+public:
+    Point(int xVal = 0, int yVal = 0) :x(xVal), y(yVal) { }
+    int getX() const { return x; }
+    int getY() const { return y; }
+    void setX(int xVal) { x = xVal; }
+    void setY(int yVal) { y = yVal; }
+    friend ostream& operator<< (ostream& out, const Point & p);
+private:
+    int x, y;
+};
+ostream& operator<< (ostream& out, const Point & p){
+    out << p.x <<' '<< p.y;
+    return out;
+}
+
+template<typename T>
+class SmartPtr;
+
+template<typename T>
+class U_Ptr{
+private:
+    friend class SmartPtr<T>;
+    U_Ptr(T *ptr) : p(ptr), count(1){}
+    ~U_Ptr() {delete p;}
+
+    int count;
+    T *p;
+};
+template<typename T>
+class SmartPtr{
+public:
+    SmartPtr(T *ptr) : rp(new U_Ptr<T>(ptr)) {}
+    //当对象作为另一个对象的副本时，复制构造函数复制副本指针，并增加与指针相应的引用计数（加1）
+    SmartPtr(const SmartPtr<T> &sp) : rp(sp.rp) {++rp->count;}
+
+    /*
+     * 先使左操作数的指针的引用计数减1（为何减1：因为指针已经指向别的地方），
+     * 如果减1后引用计数为0，则释放指针所指对象内存。
+     * 然后增加右操作数所指对象的引用计数（为何增加：因为此时做操作数指向对象即右操作数指向对象）。
+     */
+    SmartPtr& operator=(const SmartPtr<T>& rhs){
+        ++rhs.rp->count;
+        if(--rp->count == 0)
+            delete rp;
+        rp = rhs.rp;
+        return *this;
+    }
+    ~SmartPtr(){
+        if( --rp->count == 0)
+            delete rp;
+        else
+            cout<<"The count of pointer which point to the basic element is " << rp->count<<endl;
+    }
+    T & operator *(){
+        return *(rp->p);
+    }
+    T* operator ->(){
+        return rp->p;
+    }
+private:
+    U_Ptr<T> *rp;
+};
+
+int main(){
+    Point * pa = new Point(10,20);
+    //作用区域
+    {//构造函数
+        SmartPtr<Point> sptr1(pa); //count=1
+        {//复制构造
+            SmartPtr<Point> sptr2(sptr1); //count=2
+            {//赋值操作符
+                SmartPtr<Point> sptr3 = sptr1; //count=3
+                cout<< *sptr2 <<endl;
+                sptr1->setX(233);
+                cout<< *sptr2<<endl;
+            }
+            //count=2
+        }
+        //count=1
+    }
+    //count=0
+    cout<<pa->getX();
+    return 0;
+}
+-----------------------------
+10 20
+233 20
+The count of pointer which point to the basic element is 2
+The count of pointer which point to the basic element is 1
+4857920
+```
+
+# 5 指针大全
+
+https://www.cnblogs.com/hongcha717/archive/2010/10/24/1859780.html
+
+## 5.1 数组的指针
+
+数组指针（也称行指针） 定义 int (*p)[n]; ()优先级高，首先说明p是一个指针，指向一个整型的一维数组，这个一维数组的长度是n，也可以说是p的步长。也就是说执行p+1时，p要跨过n个整型数据的长度。 
+
+## 5.2 指针数组 
+
+[]优先级高，先与p结合成为一个数组，再由int*说明这是一个整型指针数组，它有n个指针类型的数组元素 
+
+这里执行p+1是错误的，这样赋值也是错误的：p=a；因为p是个不可知的表示，只存在p[0]、p[1]、p[2]...p[n-1] 
+
+## 5.3 函数指针
+
+void (*funP)(int);   //声明也可写成void(*funP)(int x)，但习惯上一般不这样。
+
+赋值时，可以写成funP=&myFun形式，也可以写成funP=myFun。 
+
+函数指针变量也可以存入一个数组内。数组的声明方法：int (*fArray[10]) ( int ); 
