@@ -397,3 +397,105 @@ void (*funP)(int);   //声明也可写成void(*funP)(int x)，但习惯上一般
 赋值时，可以写成funP=&myFun形式，也可以写成funP=myFun。 
 
 函数指针变量也可以存入一个数组内。数组的声明方法：int (*fArray[10]) ( int ); 
+
+# 6. 并发实现
+
+ C++中对共享数据的存取在并发条件下可能会引起data race的undifined行为，需要限制并发程序以某种特定的顺序执行，有两种方式：使用mutex保护共享数据，原子操作
+
+## 1 原子操作
+
+https://blog.csdn.net/liuxuejiang158blog/article/details/17413149
+
+### 1. std::atomic_flag
+
+* std::atomic_flag是一个bool原子类型有两个状态：set(flag=true) 和 clear(flag=false)，必须被ATOMIC_FLAG_INIT初始化此时flag为clear状态，相当于静态初始化。不支持拷贝、赋值等操作，这和所有atomic类型一样，因为两个原子类型之间操作不能保证原子化。atomic_flag的可操作性不强导致其应用局限性，还不如atomic\<bool\>
+* 一旦atomic_flag初始化后只有三个操作：test_and_set,clear,析构 
+* atomic_flag::test_and_set
+  * 检查flag是否被设置，若被设置直接返回true 
+  * 若没有设置则设置flag为true后再返回false。atomic_clear()清楚flag标志即flag=false。 
+* atomic_clear()清楚flag标志即flag=false 
+
+### 2. atomic\<T\>模板类
+
+atomic\<T\>模板类，生成一个T类型的原子对象，并提供了系列原子操作函数。其中T是trivially  copyable type满足：要么全部定义了拷贝/移动/赋值函数，要么全部没定义;没有虚成员;基类或其它任何非static成员都是trivally copyable。 
+
+有一条规则：不要在保护数据中通过用户自定义类型T通过参数指针或引用使得共享数据超出保护的作用域。 
+
+### 3. std::atomic针对整数和指针的特化：
+
+不能像传统那样拷贝和赋值，可以通过内置成员函数load(),store(),exchange()完成赋值，支持复合赋值运算，自增自减运算，还有特有的fetch系列函数
+
+
+
+### 4.atomic\<bool\>
+
+ atomic\<bool>同样不可以赋值(这里指两个atomic\<bool>间的赋值)、拷贝，但是其可以直接初始化，如：atomic\<bool> flag(false); flag=true。atomic_flag::test_and_set()被atomic::exchange()替代，更多操作见atomic\<T>。 
+
+compare_exchange_weak可能失败，特别是线程数多于CPU核心数时compare-exchange这个指令序列可能CPU不能保证原子化，所以经常在循环中：
+
+```cpp
+std::atomic<bool> b;
+bool x=b.load(std::memory_order_acquire);
+b.store(true);
+x=b.exchange(false,std::memory_order_acq_rel);//更改为false并返回原来的值
+```
+
+ compare_exchange_strong可以保证当atomic不等于expected时返回false，不需要循环保护。
+    std::atomic_flag是lock free的，但是atomic<bool>不一定是lock free的，可以用atomic<T>::is_lock_free()判断。
+
+##### 读者写者 
+
+```cpp
+#include <vector>
+#include <atomic>
+#include <iostream>
+std::vector<int> data;
+std::atomic<bool> data_ready(false);
+void reader_thread()
+{
+  while(!data_ready.load()) 
+  {
+    std::this_thread::sleep(std::milliseconds(1));
+  }
+  std::cout<<”The answer=”<<data[0]<<”\n”;// 1 
+}
+void writer_thread()
+{
+  data.push_back(42);//2  由于1和2处发生了data race，所以需要线程同步，可以使用mutex，此处使用atomic<bool>强制线程间有个顺序关系 
+  data_ready=true; 
+}
+```
+
+# 7 new 和 malloc
+
+new的功能是在堆区新建一个对象，并返回该对象的指针。
+
+所谓的【新建对象】的意思就是，将调用该类的构造函数，因为如果不构造的话，就不能称之为一个对象。
+
+而malloc只是机械的分配一块内存，如果用mallco在堆区创建一个对象的话，是不会调用构造函数的
+
+```
+CA *p1 = new CA;   //这里会分配内存和执行构造函数 
+CA *p2 = operator new(sizeof(CA));   //这里只是执行了普通的堆内存分配而不会调用构造函数 
+```
+
+| 特征                 | new/delete                            | malloc/free                          |
+| -------------------- | ------------------------------------- | ------------------------------------ |
+| 分配内存的位置       | 自由存储区                            | 堆                                   |
+| 内存分配成功的返回值 | 完整类型指针                          | void*                                |
+| 内存分配失败的返回值 | 默认抛出异常                          | 返回NULL                             |
+| 分配内存的大小       | 由编译器根据类型计算得出              | 必须显式指定字节数                   |
+| 处理数组             | 有处理数组的new版本new[]              | 需要用户计算数组的大小后进行内存分配 |
+| 已分配内存的扩充     | 无法直观地处理                        | 使用realloc简单完成                  |
+| 是否相互调用         | 可以，看具体的operator new/delete实现 | 不可调用new                          |
+| 分配内存时内存不足   | 客户能够指定处理函数或重新制定分配器  | 无法通过用户代码进行处理             |
+| 函数重载             | 允许                                  | 不允许                               |
+| 构造函数与析构函数   | 调用                                  | 不调用                               |
+
+# 8. 实现 new 和 delete
+
+事实上，当使用 malloc/new/new[] 申请了一块内存的时候，编译器实际上会在这块内存的头部保存一个 size_t 信息，记录了这块内存的大小。这个size信息是需要占用额外的空间的
+
+
+
+在对 p 指针进行free/delete/delete []操作的时候，实际上会先通过 *(p-sizeof(size_t))来获得这块内存的大小，然后将内存归还给系统。从这一步上来说，free，delete，delete [] 没有任何区别——也就是说，对于下面的两行代码：

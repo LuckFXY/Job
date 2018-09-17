@@ -3,5 +3,5 @@ project(Leetcode)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES 123.cpp 456.cpp)
+set(SOURCE_FILES list_merge_sort.cpp main.cpp)
 add_executable(Leetcode ${SOURCE_FILES})

@@ -71,7 +71,7 @@ private:
     U_Ptr<T> *rp;
 };
 
-int main(){
+int SmartPtr_main(){
     Point * pa = new Point(10,20);
     //作用区域
     {//构造函数
