@@ -10,7 +10,7 @@ int getSum(vector<int>& help, int start, int end){
     int s = start !=0 ? help[start] : 0;
     return help[end] - s;
 }
-
+#include<
 void minSum(vector<int>& data, vector<int>& help, int m, int mi, int start, int end){
     if(mi < m){
         if(mi==0){

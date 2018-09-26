@@ -1,12 +1,20 @@
-前言知识
 
-const的位置与区别
+
+## const的位置与区别
 
 1)  const char * p  p 是一个指向常量字符的指针，不变的是 char 的值，
 
 2)  char * const p  p 是一个指向字符的常量指针，不变的是 p 的值，即该指针不能再指向别的。
 
 一个助记的方法——“以 * 分界，把一个声明从右向左读”。
+
+## 字节的长度
+
+32位 sizeof(int) = sizeof(long)=4 sizeof(long long)=8
+
+64位 sizeof(int)=sizseof(long)=sizeof(long long) = 8
+
+指针 16位机器是2个字节，32位机器下面是4个字节， 64位 8字节
 
 # 1. 虚函数
 

@@ -1,5 +1,11 @@
 引用网址: https://blog.csdn.net/ac540101928/article/details/52381805
 
+# 三大基本特征
+
+面向对象的三个基本特征是：封装、继承、多态。
+
+![封装_继承_多态](../img/封装_继承_多态.gif)
+
 # 1. 编译后程序的内存布局
 
 ## 1.1 C/C++ 内存布局
@@ -494,6 +500,12 @@ CA *p2 = operator new(sizeof(CA));   //这里只是执行了普通的堆内存�
 | 函数重载             | 允许                                  | 不允许                               |
 | 构造函数与析构函数   | 调用                                  | 不调用                               |
 
+来自 空山明月_Blog 的CSDN 博客 ，全文地址请点击：https://blog.csdn.net/Xiongchao99/article/details/74524807?utm_source=copy  
+
+new/delete的底层实现是调用malloc/free函数实现的，而malloc/free的底层实现也不是直接操作内存而是调用系统API实现的。
+
+
+
 # 8. 实现 new 和 delete
 
 事实上，当使用 malloc/new/new[] 申请了一块内存的时候，编译器实际上会在这块内存的头部保存一个 size_t 信息，记录了这块内存的大小。这个size信息是需要占用额外的空间的
@@ -543,3 +555,6 @@ C++中一个空类的大小为什么是1？
 来自 zhangxaochen 的CSDN 博客 ，全文地址请点击：https://blog.csdn.net/zhangxaochen/article/details/8032758?utm_source=copy  
 
 其余什么类的4字节对齐，虚表占用空间，子类继承了父类占用的空间，类内static不占类空间 就不再提。 
+
+小端/大端的区别是指低位数据存储在内存低位还是高位的区别。其中小端机器指：数据低位存储在内存地址低位，高位数据则在内存地址高位；大端机器正好相反。 当前绝大部分机器都是小端机器，就是比较符合人们逻辑思维的数据存储方式，比如intel的机器基本就都是小端机器。
+
