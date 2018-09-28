@@ -22,13 +22,9 @@
 
 [西瓜书编程练习](./watermelon_practice)(suspended)
 
+## [git的一些用法](./git使用)
+
+[git 提交大文件失败，删除法](./git使用/git大文件提交失败.md)
 
 
-
-
-惨烈的机试：
-
-[20180811 网易](./CPP/netease_20180811.md)
-
-[20180812 头条](./CPP/bytedance_20180812.md)
 
